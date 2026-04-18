@@ -457,9 +457,9 @@ output_trace() {
   [[ "$RAW" == false ]] && print_banner "Job Trace: #$job_id"
 
   if [[ "$SAVE" == true || -n "$OUTPUT_FILE" ]]; then
-    local out="${OUTPUT_FILE:-$(default_output_file "$job_id")}"
-    printf '%s\n' "$trace" > "$out"
-    [[ "$RAW" == false ]] && info "Saved log to: $out"
+    local outfile="${OUTPUT_FILE:-$(default_output_file "$job_id")}"
+    printf '%s\n' "$trace" > "$outfile"
+    [[ "$RAW" == false ]] && info "Saved log to: $outfile"
   fi
 
   printf '%s\n' "$trace"
@@ -570,7 +570,13 @@ main() {
       selected_job_id="$(echo "$jobs_json" | jq -r --arg j "$JOB_NAME" '[ .[] | select(.name==$j) ][0].id')"
     else
       count="$(echo "$jobs_json" | jq 'length')"
-      [[ "$count" -eq 1 ]] && selected_job_id="$(echo "$jobs_json" | jq -r '.[0].id')" || { err "Args mode returned $count jobs. Provide --stage and/or --job (or use --job-id)."; list_jobs_hint "$jobs_json"; exit 1; }
+      if [[ "$count" -eq 1 ]]; then
+        selected_job_id="$(echo "$jobs_json" | jq -r '.[0].id')"
+      else
+        err "Args mode returned $count jobs. Provide --stage and/or --job (or use --job-id)."
+        list_jobs_hint "$jobs_json"
+        exit 1
+      fi
     fi
   else
     selected_stage="$(resolve_stage "$jobs_json")"
