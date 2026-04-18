@@ -2,7 +2,7 @@
 #                                                 GLTrace - Makefile
 # <====================================================================================================================>
 
-.PHONY: help usage check deps lint test test-deps fmt install-local
+.PHONY: help usage check deps lint test test-deps fmt install-local docs-up docs-down docs-logs
 
 .DEFAULT_GOAL := help
 
@@ -45,6 +45,20 @@ fmt: ## Format with shfmt (if installed)
 
 test: ## Run bats test suite
 	bats tests/
+
+
+# <====================================================================================================================>
+#                                                     Docs site
+# <====================================================================================================================>
+
+docs-up: ## Start docs dev server (localhost:4321/gltrace/)
+	cd docs && docker compose up -d
+
+docs-down: ## Stop docs container
+	cd docs && docker compose down
+
+docs-logs: ## Tail docs container logs
+	cd docs && docker compose logs -f docs
 
 
 # <====================================================================================================================>

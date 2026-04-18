@@ -1,0 +1,82 @@
+---
+title: GLTrace
+description: Terminal-first GitLab pipeline log explorer. Pull job traces straight into your terminal — or let your AI agent do it.
+template: splash
+hero:
+  tagline: Pull any GitLab job trace into your terminal in one command. No browser, no clicking, no copy-pasting.
+  image:
+    file: ../../assets/logo.svg
+  actions:
+    - text: Quick Start
+      link: /gltrace/quickstart/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/glsuite/gltrace
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Why gltrace?
+
+CI jobs fail. The usual workflow is painful:
+
+| Approach | Problem |
+|----------|---------|
+| **GitLab web UI** | Open browser, find pipeline, click job, scroll to error |
+| **`curl` + GitLab API** | Requires knowing the endpoints, writing pagination logic |
+| **GitLab CLI (`glab`)** | General-purpose, verbose for log retrieval, no wizard mode |
+| **Copy-paste to AI agent** | You still have to find and copy the log yourself |
+
+**gltrace fills the gap** — one command to pull any job trace into your terminal, with interactive selection when you don't know the job ID and full non-interactive mode when you do.
+
+## Features
+
+<CardGrid>
+  <Card title="Works everywhere" icon="rocket">
+    Any GitLab instance — gitlab.com or self-hosted. Just set `GITLAB_URL` and `GITLAB_TOKEN`.
+  </Card>
+  <Card title="Wizard mode" icon="pencil">
+    Run with no args for a `gum`-powered interactive wizard that prompts for everything. Auto-installs `gum` if missing.
+  </Card>
+  <Card title="Args mode" icon="setting">
+    Fully non-interactive, deterministic output. Perfect for scripts and AI agents.
+  </Card>
+  <Card title="AI agent ready" icon="puzzle">
+    Designed as a tool that AI coding agents (Claude Code, Cursor, Aider) can call directly to read CI failures and fix code.
+  </Card>
+  <Card title="Downstream pipelines" icon="approve-check-circle">
+    `--include-downstream` pulls jobs from bridge-triggered child pipelines too.
+  </Card>
+  <Card title="Flexible output" icon="document">
+    Save traces to file with `--save`, pipe-friendly raw mode with `--raw`, fzf/gum/select pickers.
+  </Card>
+</CardGrid>
+
+## Get started in 3 steps
+
+<CardGrid>
+  <Card title="1. Install" icon="download">
+    ```bash
+    brew tap glsuite/tools
+    brew install gltrace
+    ```
+  </Card>
+  <Card title="2. Set credentials" icon="setting">
+    ```bash
+    export GITLAB_URL="https://gitlab.com"
+    export GITLAB_TOKEN="<your-token>"
+    ```
+  </Card>
+  <Card title="3. Run" icon="rocket">
+    ```bash
+    # Interactive wizard
+    gltrace
+
+    # Or directly
+    gltrace --project-id 123 --status failed
+    ```
+  </Card>
+</CardGrid>
