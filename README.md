@@ -12,6 +12,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
   <a href="https://github.com/glsuite/gltrace/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/glsuite/gltrace/test.yml?branch=main&label=tests" alt="Tests"></a>
   <a href="https://github.com/glsuite/gltrace/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/glsuite/gltrace/lint.yml?branch=main&label=lint" alt="Lint"></a>
+  <a href="https://github.com/glsuite/homebrew-tools"><img src="https://img.shields.io/badge/brew-glsuite%2Ftools-orange?logo=homebrew" alt="Homebrew Tap"></a>
   <a href="https://github.com/glsuite/gltrace/stargazers"><img src="https://img.shields.io/github/stars/glsuite/gltrace?style=social" alt="GitHub Stars"></a>
 </p>
 
@@ -84,6 +85,13 @@ AssertionError: expected 401, got 200
 ---
 
 ## Install
+
+### Homebrew (recommended)
+
+```bash
+brew tap glsuite/tools
+brew install gltrace
+```
 
 ### Manual
 
