@@ -7,7 +7,7 @@ set -euo pipefail
 #   2) Args mode: non-interactive, deterministic output
 
 SCRIPT_NAME="$(basename "$0")"
-VERSION="1.0.0" # x-release-please-version
+VERSION="1.1.0" # x-release-please-version
 ORIGINAL_ARGC=$#
 
 # Config (CLI overrides env)
