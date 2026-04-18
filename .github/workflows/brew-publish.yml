@@ -1,0 +1,36 @@
+name: Brew Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  bump-tap:
+    name: Bump homebrew-tools formula
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compute SHA256 and version
+        id: meta
+        run: |
+          VERSION="${{ github.ref_name }}"
+          URL="https://github.com/glsuite/gltrace/archive/refs/tags/${VERSION}.tar.gz"
+          SHA=$(curl -sL "$URL" | shasum -a 256 | cut -d' ' -f1)
+          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: glsuite/homebrew-tools
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+
+      - name: Update formula version and SHA256
+        run: |
+          sed -i "s|url \"https://github.com/glsuite/gltrace/archive/refs/tags/.*\"|url \"https://github.com/glsuite/gltrace/archive/refs/tags/${{ steps.meta.outputs.version }}.tar.gz\"|" Formula/gltrace.rb
+          sed -i "s|sha256 \".*\"|sha256 \"${{ steps.meta.outputs.sha256 }}\"|" Formula/gltrace.rb
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: bump gltrace to ${{ steps.meta.outputs.version }}"
+          git push
