@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/glsuite/gltrace/compare/v1.1.0...v1.1.1) (2026-04-18)
+
+
+### Bug Fixes
+
+* remove macOS-generated package-lock.json and add to gitignore ([5baae1d](https://github.com/glsuite/gltrace/commit/5baae1d9398861c5c32b42bc0582dbe5206ae7fe))
+
 ## [1.1.0](https://github.com/glsuite/gltrace/compare/v1.0.0...v1.1.0) (2026-04-18)
 
 
