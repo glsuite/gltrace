@@ -7,6 +7,7 @@ set -euo pipefail
 #   2) Args mode: non-interactive, deterministic output
 
 SCRIPT_NAME="$(basename "$0")"
+VERSION="1.0.0"
 ORIGINAL_ARGC=$#
 
 # Config (CLI overrides env)
@@ -75,6 +76,7 @@ UI options:
 
 Help:
   -h, --help               Show this help
+  -V, --version            Show version
 
 Environment variables:
   GITLAB_URL
@@ -140,18 +142,18 @@ api_get_with_headers() {
 
 fetch_paginated_array() {
   local base_path_with_query="$1"
-  local page=1 body_file headers_file next_page
+  local page=1 next_page
   local combined='[]'
+  local body_file headers_file
+  body_file="$(mktemp)"
+  headers_file="$(mktemp)"
+  trap 'rm -f "$body_file" "$headers_file"' RETURN
 
   while true; do
-    body_file="$(mktemp)"
-    headers_file="$(mktemp)"
-
     api_get_with_headers "${base_path_with_query}&page=${page}" "$body_file" "$headers_file"
     combined="$(jq -s '.[0] + .[1]' <(echo "$combined") "$body_file")"
     next_page="$(awk -F': ' 'tolower($1)=="x-next-page" {gsub(/\r/,"",$2); print $2}' "$headers_file" | tail -n1)"
 
-    rm -f "$body_file" "$headers_file"
     [[ -z "${next_page:-}" ]] && break
     page="$next_page"
   done
@@ -482,6 +484,7 @@ parse_args() {
       --raw) RAW=true; shift ;;
       --no-interactive) NO_INTERACTIVE=true; shift ;;
       -h|--help) usage; exit 0 ;;
+      -V|--version) echo "$SCRIPT_NAME $VERSION"; exit 0 ;;
       *) err "Unknown argument: $1"; usage; exit 1 ;;
     esac
   done
@@ -496,6 +499,8 @@ validate_args() {
   [[ -z "$TOKEN" ]] && { err "Missing token (--token or env GITLAB_TOKEN)"; exit 1; }
 
   GITLAB_URL="$(normalize_url "$GITLAB_URL")"
+  [[ -n "$PIPELINE_ID" && ! "$PIPELINE_ID" =~ ^[0-9]+$ ]] && { err "--pipeline-id must be numeric"; exit 1; }
+  [[ -n "$JOB_ID"      && ! "$JOB_ID"      =~ ^[0-9]+$ ]] && { err "--job-id must be numeric"; exit 1; }
   [[ -n "$PIPELINE_ID" && -n "$JOB_ID" ]] && { err "Use either --pipeline-id or --job-id, not both"; exit 1; }
 
   [[ -n "$STATUS_FILTER" ]] && parse_status_csv "$STATUS_FILTER" >/dev/null
