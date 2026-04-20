@@ -3,6 +3,11 @@ name: Brew Publish
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish (e.g. v1.1.1)'
+        required: true
 
 jobs:
   bump-tap:
@@ -12,7 +17,7 @@ jobs:
       - name: Compute SHA256 and version
         id: meta
         run: |
-          VERSION="${{ github.ref_name }}"
+          VERSION="${{ github.event.inputs.tag || github.ref_name }}"
           URL="https://github.com/glsuite/gltrace/archive/refs/tags/${VERSION}.tar.gz"
           SHA=$(curl -sL "$URL" | shasum -a 256 | cut -d' ' -f1)
           echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
@@ -32,5 +37,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.RELEASE_PLEASE_TOKEN }}@github.com/glsuite/homebrew-tools.git
           git commit -am "chore: bump gltrace to ${{ steps.meta.outputs.version }}"
           git push

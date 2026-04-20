@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">gltrace</h1>
+  <h1 align="center">GLTrace</h1>
   <p align="center">
     Terminal-first GitLab pipeline log explorer.
     <br />
@@ -15,6 +15,10 @@
   <a href="https://github.com/glsuite/homebrew-tools"><img src="https://img.shields.io/badge/brew-glsuite%2Ftools-orange?logo=homebrew" alt="Homebrew Tap"></a>
   <a href="https://github.com/glsuite/gltrace/stargazers"><img src="https://img.shields.io/github/stars/glsuite/gltrace?style=social" alt="GitHub Stars"></a>
 </p>
+
+---
+
+Welcome to the repository for [GLTrace](https://glsuite.github.io/gltrace/) — a terminal-first GitLab pipeline log explorer for humans and AI agents. This repo contains the source for the gltrace CLI, a Homebrew tap formula, and a full test suite. Please review the [Why gltrace?](#why-gltrace) section below for more details.
 
 ---
 
